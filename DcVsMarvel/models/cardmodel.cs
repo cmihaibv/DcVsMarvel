@@ -13,6 +13,7 @@ namespace DcVsMarvel.models
         public int Cardhealth { get; set; }
         public int Carddamage { get; set; }
         public string Imageurl { get; set; }
+        public string Deckname { get; set; }
 
         public Cardmodel(int theid)
         {
@@ -23,6 +24,7 @@ namespace DcVsMarvel.models
             Cardhealth = Int32.Parse(cards_table.GetRow(Id)["health"]);
             Carddamage = Int32.Parse(cards_table.GetRow(Id)["damage"]);
             Imageurl = cards_table.GetRow(Id)["image"];
+            Deckname = cards_table.GetRow(Id)["deckname"];
         }
 
 
@@ -44,6 +46,11 @@ namespace DcVsMarvel.models
             //imageurl = cards_table.GetRow(id)["image"];
 
             return Imageurl;
+        }
+
+        public string GetDeckName()
+        {
+            return Deckname;
         }
     }
 }
