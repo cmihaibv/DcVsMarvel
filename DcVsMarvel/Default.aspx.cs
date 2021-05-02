@@ -11,48 +11,20 @@ namespace DcVsMarvel
 {
     public partial class Default : System.Web.UI.Page
     {
-        Playermodel player = new Playermodel();
+        Playermodel player1 = new Playermodel();
+        Playermodel player2 = new Playermodel();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                //SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("Cards");   // Need to load the table we're going to insert into.
-
-                //SQLDatabase.DatabaseRow new_row = cards_table.NewRow();    // Create a new based on the format of the rows in this table.
-
-                //string new_id = cards_table.GetNextID().ToString();    // Use this to create a new ID number for this module. This new ID follows on from the last row's ID number.
-
-                //new_row["name"] = "2C13";            // Card name
-                //new_row["health"] = "3";
-                //new_row["damage"] = "4";
-
-                //cards_table.Insert(new_row);
-
-
-                TextBox1.Text = "";
-
-
-
-
-
 
                 Cardmodel[] card = new Cardmodel[12];
 
-                //TextBox1.Text += card[0].GetData();
-                //Image1.ImageUrl += card[0].GetImg();
 
                 for (int i = 0; i < card.Length; ++i)
                 {
                     card[i] = new Cardmodel(i);
                 }
-
-                //for (int i = 0; i < card.Length; ++i)
-                //{
-                //    TextBox1.Text += card[i].GetData() + "\n";
-                //}
-                //Image1.ImageUrl += card[0].GetImg();
-                //Image2.ImageUrl += card[1].GetImg();
-                //Image3.ImageUrl += card[2].GetImg();
 
                 StringBuilder sb = new StringBuilder();
 
@@ -72,11 +44,21 @@ namespace DcVsMarvel
                    Panel1.Controls.Add(new Label { Text = sb.ToString() });
             }
         }
-        protected void button1_Click(object sender, System.EventArgs e)
+        protected void button1_Click(object sender, EventArgs e)
         {
-            player.setName(TextBox1.Text.ToString());
-            TextBox1.Text += player.getPlayerIdg();
-            TextBox1.Text += player.getPlayerId();
+            if(TextBox1.Text != "" && TextBox2.Text != "")
+            { 
+            player1.setName(TextBox1.Text.ToString());
+
+            player2.setName(TextBox2.Text.ToString());
+
+                TextBox1.ReadOnly = true;
+                TextBox2.ReadOnly = true;
+                Button1.Visible = false;
+            }
+            else
+                TextBox1.Text += "All players must have a name";
+
         }
     }
 }

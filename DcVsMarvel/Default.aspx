@@ -20,14 +20,12 @@
         <div id="main-content">
             <div id="game-content">
                 <div id="player-1" class="controlls">
-                    <asp:TextBox ID="TextBox1" runat="server">Put your name here</asp:TextBox>
-                    <asp:Button ID="Button1" runat="server" Text="Go" OnClick="button1_Click" />
+                    <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
                 </div>
-
                 <div id="player-2" class="controlls">
-                    <asp:TextBox ID="TextBox2" runat="server">Put your name here</asp:TextBox>
-                    <asp:Button ID="Button2" runat="server" Text="Go" />
+                    <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox>
                 </div>
+                <asp:Button ID="Button1" runat="server" Text="Go" OnClick="button1_Click" />
             </div>
         </div>
         <asp:Panel ID="Panel1" runat="server"></asp:Panel>
