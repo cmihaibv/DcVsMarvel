@@ -7,20 +7,22 @@ namespace DcVsMarvel.models
 {
     public class Cardmodel
     {
-        public int id { get; set; }
-        public string cardname { get; set; }
-        public int cardhealth { get; set; }
-        public int carddamage { get; set; }
-        public string imageurl { get; set; }
+        public int Id { get; set; }
+        public int Cardid { get; set; }
+        public string Cardname { get; set; }
+        public int Cardhealth { get; set; }
+        public int Carddamage { get; set; }
+        public string Imageurl { get; set; }
 
         public Cardmodel(int theid)
         {
             SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("Cards");   // Need to load the table we're going to insert into.
-            id = theid;
-            cardname = cards_table.GetRow(id)["name"];
-            cardhealth = Int32.Parse(cards_table.GetRow(id)["health"]);
-            carddamage = Int32.Parse(cards_table.GetRow(id)["damage"]);
-            imageurl = cards_table.GetRow(id)["image"];
+            Id = theid;
+            Cardid = Int32.Parse(cards_table.GetRow(Id)["id"]);
+            Cardname = cards_table.GetRow(Id)["name"];
+            Cardhealth = Int32.Parse(cards_table.GetRow(Id)["health"]);
+            Carddamage = Int32.Parse(cards_table.GetRow(Id)["damage"]);
+            Imageurl = cards_table.GetRow(Id)["image"];
         }
 
 
@@ -30,7 +32,7 @@ namespace DcVsMarvel.models
 
             //return cards_table.GetRow(id)["id"] + "\t"+ cards_table.GetRow(id)["name"] + "\t" + cards_table.GetRow(id)["health"] + "\t" + cards_table.GetRow(id)["damage"] + "\n";
 
-            return id + cardname + cardhealth + carddamage;
+            return Cardid + "\t" + Cardname + "\t" + Cardhealth + "\t" + Carddamage + "\n";
 
         }
 
@@ -41,7 +43,7 @@ namespace DcVsMarvel.models
 
             //imageurl = cards_table.GetRow(id)["image"];
 
-            return imageurl;
+            return Imageurl;
         }
     }
 }

@@ -255,7 +255,7 @@ namespace SQLDatabase
 
             for (int n = 0; n < ColumnCount; ++n)
             {
-                if (row_to_update[n] != "" && ColumnNames[n] != "ID")
+                if (row_to_update[n] != "" && ColumnNames[n] != "id")
                 {
                     u += ColumnNames[n] + "='" + row_to_update[n] + "', ";
                 }
@@ -267,7 +267,7 @@ namespace SQLDatabase
 
             SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DataBase"].ConnectionString);    // Grab the conection string for accessing the database.
 
-            string sql_command = "UPDATE " + TableName + " SET " + u + " WHERE ID='" + row_to_update["ID"] + "';";
+            string sql_command = "UPDATE " + TableName + " SET " + u + " WHERE ID='" + row_to_update["id"] + "';";
 
             SqlCommand command = new SqlCommand(sql_command, connection);    // Associate the sql query with the connection.
 
@@ -277,7 +277,7 @@ namespace SQLDatabase
 
             connection.Close();
 
-            Rows[FindRowIndex("ID", row_to_update["ID"])] = row_to_update;  // Rewrite this new row over the existing row in the in-memory database.
+            Rows[FindRowIndex("id", row_to_update["id"])] = row_to_update;  // Rewrite this new row over the existing row in the in-memory database.
         }
 
 
@@ -289,7 +289,7 @@ namespace SQLDatabase
         {
             if (RowCount == 0) return 0;
 
-            return int.Parse(Rows[RowCount - 1]["ID"]) + 1;
+            return int.Parse(Rows[RowCount - 1]["id"]) + 1;
         }
 
 

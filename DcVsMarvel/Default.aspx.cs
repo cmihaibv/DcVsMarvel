@@ -11,15 +11,32 @@ namespace DcVsMarvel
 {
     public partial class Default : System.Web.UI.Page
     {
+        Playermodel player = new Playermodel();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("Cards");   // Need to load the table we're going to insert into.
+                //SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("Cards");   // Need to load the table we're going to insert into.
 
-                cards_table.Bind(DataList1);
+                //SQLDatabase.DatabaseRow new_row = cards_table.NewRow();    // Create a new based on the format of the rows in this table.
 
-                Cardmodel[] card = new Cardmodel[3];
+                //string new_id = cards_table.GetNextID().ToString();    // Use this to create a new ID number for this module. This new ID follows on from the last row's ID number.
+
+                //new_row["name"] = "2C13";            // Card name
+                //new_row["health"] = "3";
+                //new_row["damage"] = "4";
+
+                //cards_table.Insert(new_row);
+
+
+                TextBox1.Text = "";
+
+
+
+
+
+
+                Cardmodel[] card = new Cardmodel[12];
 
                 //TextBox1.Text += card[0].GetData();
                 //Image1.ImageUrl += card[0].GetImg();
@@ -38,45 +55,28 @@ namespace DcVsMarvel
                 //Image3.ImageUrl += card[2].GetImg();
 
                 StringBuilder sb = new StringBuilder();
+
                 sb.Append("<table>");
-                sb.Append("<tr>");
                 for (int i = 0; i < card.Length; ++i)
                 {
+                    if(i==0 || i== card.Length / 2) sb.Append("<tr>");
                     sb.Append("<th>");
-                    sb.Append(TextBox1.Text += card[i].GetData() + "\n");
+                    sb.Append("<img" + ' ' +"src=" + '"' + card[i].GetImg() + '"' + '>');
+                    sb.Append(card[i].GetData() + "\n");
                     sb.Append("</th>");
-                }
+                    if(i== (card.Length/2) - 1 || i== card.Length) sb.Append("</tr>");
 
-                sb.Append("</tr>");
+                }
                 sb.Append("</table>");
 
-                Panel1.Controls.Add(new Label { Text = sb.ToString() });
-
-
-
-
+                   Panel1.Controls.Add(new Label { Text = sb.ToString() });
             }
         }
-
-        protected void DataList1_ItemDataBound(object sender, DataListItemEventArgs e)
+        protected void button1_Click(object sender, System.EventArgs e)
         {
-            //if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            //{
-            //    DataListItem i = e.Item;
-            //    System.Data.DataRowView r = ((System.Data.DataRowView)e.Item.DataItem); // 'r' represents the next row in the table that has been passed here via the 'bind' function.
-
-            //    // Find the label controls that are associated with this data item.
-            //    Label ID_LBL = (Label)e.Item.FindControl("ID_Label");           // Find the ID Label.
-            //    Label Name_LBL = (Label)e.Item.FindControl("Name_Label");       // Find the Name Label.
-            //    Label Health_LBL = (Label)e.Item.FindControl("Health_Label"); // Find the Staff ID Label.
-            //    Label Damage_LBL = (Label)e.Item.FindControl("Damage_Label"); // Find the Staff ID Label.
-
-
-            //    ID_LBL.Text = r["id"].ToString();               // Now we have the labels, we can insert the data...   ID number first,
-            //    Name_LBL.Text = r["name"].ToString();           // Module name.
-            //    Health_LBL.Text = r["health"].ToString();     // Staff ID number.
-            //    Damage_LBL.Text = r["damage"].ToString();     // Staff ID number.
-            //}
+            player.setName(TextBox1.Text.ToString());
+            TextBox1.Text += player.getPlayerIdg();
+            TextBox1.Text += player.getPlayerId();
         }
     }
 }
