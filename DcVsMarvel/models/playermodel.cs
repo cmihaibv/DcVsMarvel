@@ -55,6 +55,10 @@ namespace DcVsMarvel.models
         {
             return Playerhand[cardid].GetData(); 
         }
+        public bool isCardAlive(int cardid) 
+        {
+            return Playerhand[cardid].IsAlive();
+        }
         public string getPlayerCardImg(int cardid)      //return image of card
         {
             return Playerhand[cardid].GetImg();
@@ -68,7 +72,6 @@ namespace DcVsMarvel.models
             return Id.ToString();
         }
 
-        
         public void setName(string name)    //find if user exist in database, add it if new user
         {
             Playername = name;
@@ -104,7 +107,24 @@ namespace DcVsMarvel.models
 
                 players_table.Insert(new_row);
             }
-
+        }
+        public string DeckName(int cardid)
+        {
+            string cardname = Playerhand[cardid].Deckname;
+            return cardname;
+        }
+        public int CardHealth(int cardid)
+        {
+            int cardhealth = Playerhand[cardid].Cardhealth;
+            return cardhealth;
+        }
+        public int CardDamage(int cardid)
+        {
+            int carddamage = Playerhand[cardid].Carddamage;
+            return carddamage;
+        }
+        public void SetCardHealth(int cardid)
+        {
 
         }
     }

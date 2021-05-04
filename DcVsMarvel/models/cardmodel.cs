@@ -14,6 +14,7 @@ namespace DcVsMarvel.models
         public int Carddamage { get; set; }
         public string Imageurl { get; set; }
         public string Deckname { get; set; }
+        public bool Cardalive { get; set; }
 
         public Cardmodel(int theid)
         {
@@ -25,26 +26,18 @@ namespace DcVsMarvel.models
             Carddamage = Int32.Parse(cards_table.GetRow(Id)["damage"]);
             Imageurl = cards_table.GetRow(Id)["image"];
             Deckname = cards_table.GetRow(Id)["deckname"];
+            Cardalive = true;
         }
 
 
         public string GetData()
         {
-            //SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("Cards");   // Need to load the table we're going to insert into.
-
-            //return cards_table.GetRow(id)["id"] + "\t"+ cards_table.GetRow(id)["name"] + "\t" + cards_table.GetRow(id)["health"] + "\t" + cards_table.GetRow(id)["damage"] + "\n";
-
             return Cardid + "\t" + Cardname + "\t" + Cardhealth + "\t" + Carddamage + "\n";
-
         }
 
 
         public string GetImg()
         {
-            //SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("Cards");
-
-            //imageurl = cards_table.GetRow(id)["image"];
-
             return Imageurl;
         }
 
@@ -52,5 +45,16 @@ namespace DcVsMarvel.models
         {
             return Deckname;
         }
+
+        public bool IsAlive()
+        {
+            Cardalive = false;
+
+            if (Cardhealth > 0)
+                Cardalive = true;
+
+            return Cardalive;
+        }
+
     }
 }
