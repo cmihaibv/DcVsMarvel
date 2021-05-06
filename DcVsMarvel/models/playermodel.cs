@@ -12,65 +12,7 @@ namespace DcVsMarvel.models
         public string Playername { get; set; }
         public int Playerwins { get; set; }
         public int Playerloses { get; set; }
-        public Cardmodel[] Playerhand { get; set; }
 
-        public void setPlayerHand(int decknum) // set the deck of a player
-        {
-            Playerhand = new Cardmodel[6];
-
-            SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("Cards");
-
-            Cardmodel[] tempcards = new Cardmodel[cards_table.RowCount];
-
-            for (int i = 0; i < cards_table.RowCount; ++i)
-            {
-                tempcards[i] = new Cardmodel(i);
-            }
-
-            int r = 0;
-            if(decknum==1) // dc universe deck
-            {
-                for (int i = 0; i < cards_table.RowCount; ++i)
-                {
-                    if (tempcards[i].GetDeckName() == "dc")
-                    {
-                        Playerhand[r] = tempcards[i];
-                        r++;
-                    }
-                }
-            }
-            else if(decknum==2) // marvel deck
-            {
-                for (int i = 0; i < cards_table.RowCount; ++i)
-                {
-                    if (tempcards[i].GetDeckName() == "marvel")
-                    {
-                        Playerhand[r] = tempcards[i];
-                        r++;
-                    }
-                }
-            }
-        }
-        public string getPlayerCard(int cardid)         //return card data
-        {
-            return Playerhand[cardid].GetData(); 
-        }
-        public bool isCardAlive(int cardid) 
-        {
-            return Playerhand[cardid].IsAlive();
-        }
-        public string getPlayerCardImg(int cardid)      //return image of card
-        {
-            return Playerhand[cardid].GetImg();
-        }
-        public string getPlayerId()                  //player user Id in database
-        {
-            return PlayerId.ToString();
-        }
-        public string getPlayerIdg()                //player user Id
-        {
-            return Id.ToString();
-        }
 
         public void setName(string name)    //find if user exist in database, add it if new user
         {
@@ -81,10 +23,10 @@ namespace DcVsMarvel.models
 
             string[] names = new string[players_table.RowCount];
 
-            int tempid=0;
+            int tempid = 0;
             bool match = false;
             for (int r = 0; r < players_table.RowCount; ++r)
-            {  
+            {
                 tempid = Int32.Parse(players_table.GetRow(r)["id"]);
                 names[r] = players_table.GetRow(r)["name"];
                 if (names[r] == Playername)
@@ -101,31 +43,35 @@ namespace DcVsMarvel.models
                 }
                 tempid++;
             }
-            if(match != true)
+            if (match != true)
             {
                 new_row["name"] = Playername;
 
                 players_table.Insert(new_row);
             }
-        }
-        public string DeckName(int cardid)
-        {
-            string cardname = Playerhand[cardid].Deckname;
-            return cardname;
-        }
-        public int CardHealth(int cardid)
-        {
-            int cardhealth = Playerhand[cardid].Cardhealth;
-            return cardhealth;
-        }
-        public int CardDamage(int cardid)
-        {
-            int carddamage = Playerhand[cardid].Carddamage;
-            return carddamage;
-        }
-        public void SetCardHealth(int cardid)
-        {
 
+            SQLDatabase.DatabaseTable gameplayer_table = new SQLDatabase.DatabaseTable("GamePlayers");
+            new_row = gameplayer_table.NewRow();
+            new_row["name"] = Playername;
+            new_row["playerid"] = PlayerId.ToString();
+            gameplayer_table.Insert(new_row);
+        }
+        public void SetDeckToPlayer(int playerid ,string column, string deckname)
+        {
+            SQLDatabase.DatabaseTable gameplayer_table = new SQLDatabase.DatabaseTable("GamePlayers");
+
+            gameplayer_table.Update(column, deckname, playerid.ToString());
+        }
+        public string DeckName(int playerid)
+        {
+            SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("Cards");
+
+            return cards_table.GetRow(playerid)["deckname"];
+        }
+        public void CreateDeck(int playerid, string deckname)
+        {
+            SQLDatabase.DatabaseTable playercards = new SQLDatabase.DatabaseTable("GamePlayers");
+            playercards.CreateTable(playerid.ToString(), deckname);
         }
     }
 }

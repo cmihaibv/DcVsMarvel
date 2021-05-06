@@ -13,6 +13,7 @@ namespace DcVsMarvel
     {
         Playermodel player1 = new Playermodel();
         Playermodel player2 = new Playermodel();
+        Cardmodel[] cards;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -22,6 +23,8 @@ namespace DcVsMarvel
                 Button3.Visible = false;
                 Button4.Visible = false;
                 Button5.Visible = false;
+                Button6.Visible = false;
+                Button7.Visible = false;
                 SelectDeckp1.Visible = false;
                 SelectDeckp2.Visible = false;
 
@@ -38,7 +41,6 @@ namespace DcVsMarvel
                 TextBox1.ReadOnly = true;
                 TextBox2.ReadOnly = true;
                 Button1.Visible = false;
-
                 Button2.Visible = true;
                 Button3.Visible = true;
                 Button4.Visible = true;
@@ -51,29 +53,47 @@ namespace DcVsMarvel
 
         }
 
-        protected void Button1_Click(object sender, EventArgs e)                        //player1 button dc deck
+        protected void DeleteTemp_Button(object sender, EventArgs e)
         {
-            Panel1.Controls.Add(new Label { Text = DcDeckBuilder(1).ToString() });
+            DeleteTemporaryTables();
+            Button8.Visible = false;
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)                        //player1 button dc deck deck_1
+        {
+            player1.SetDeckToPlayer(1, "deckname" , "dc");
+            player1.CreateDeck(1, "dc");
+            GetPlayerHand(1);
+            Panel1.Controls.Add(new Label { Text = DisplayCards().ToString() });
             Button2.Visible = false;
             Button3.Visible = false;
             P1dcdeck.Visible = false;
             P1marveldeck.Visible = false;
+            Button6.Visible = true;
             Button7.Visible = false;
             UpdateCheckBox(1);
+
         }
         protected void Button2_Click(object sender, EventArgs e)                        //player1 button marvel deck
         {
-            Panel1.Controls.Add(new Label { Text = MarvelDeckBuilder(1).ToString() });
+            player1.SetDeckToPlayer(1, "deckname", "marvel");
+            player1.CreateDeck(1, "marvel");
+            GetPlayerHand(1);
+            Panel1.Controls.Add(new Label { Text = DisplayCards().ToString() });
             Button2.Visible = false;
             Button3.Visible = false;
             P1dcdeck.Visible = false;
             P1marveldeck.Visible = false;
+            Button6.Visible = true;
             Button7.Visible = false;
             UpdateCheckBox(1);
         }
         protected void Button3_Click(object sender, EventArgs e)                        //player2 button dc deck
         {
-            Panel2.Controls.Add(new Label { Text = DcDeckBuilder(2).ToString() });
+            player2.SetDeckToPlayer(2, "deckname", "dc");
+            player2.CreateDeck(2, "dc");
+            GetPlayerHand(2);
+            Panel2.Controls.Add(new Label { Text = DisplayCards().ToString() });
             Button4.Visible = false;
             Button5.Visible = false;
             P2dcdeck.Visible = false;
@@ -83,7 +103,10 @@ namespace DcVsMarvel
         }
         protected void Button4_Click(object sender, EventArgs e)                        //player2 button marvel deck
         {
-            Panel2.Controls.Add(new Label { Text = MarvelDeckBuilder(2).ToString() });
+            player2.SetDeckToPlayer(2, "deckname", "marvel");
+            player2.CreateDeck(2, "marvel");
+            GetPlayerHand(2);
+            Panel2.Controls.Add(new Label { Text = DisplayCards().ToString() });
             Button4.Visible = false;
             Button5.Visible = false;
             P2dcdeck.Visible = false;
@@ -91,211 +114,186 @@ namespace DcVsMarvel
             Button7.Visible = false;
             UpdateCheckBox(2);
         }
-        protected void Button6_Click(object sender, EventArgs e)                        //player2 button marvel deck
+        protected void Button6_Click(object sender, EventArgs e)                        //player1 attack
         {
-            DoJob();
             Button6.Visible = false;
             Button7.Visible = true;
+            //DoJob();
+            UpdatePanel();
         }
-        protected void Button7_Click(object sender, EventArgs e)
+        protected void Button7_Click(object sender, EventArgs e)                        //player1 attack
         {
-            DoJob();
-            Button7.Visible = false;
             Button6.Visible = true;
-        }
-        protected void DoJob()
-        {
-            if (player1.DeckName(1) == "dc")
-                Panel1.Controls.Add(new Label { Text = DcDeckBuilder(1).ToString() });
-            if (player1.DeckName(1) == "marvel")
-                Panel1.Controls.Add(new Label { Text = MarvelDeckBuilder(1).ToString() });
-            if (player1.DeckName(1) == "dc")
-                Panel2.Controls.Add(new Label { Text = DcDeckBuilder(2).ToString() });
-            if (player1.DeckName(1) == "marvel")
-                Panel2.Controls.Add(new Label { Text = MarvelDeckBuilder(2).ToString() });
-            UpdateCheckBox(1);
-            UpdateCheckBox(2);
+            Button7.Visible = false;
+            //DoJob();
+            UpdatePanel();
         }
 
-        protected StringBuilder DcDeckBuilder(int playerid)                             //dc deck builder
+        protected void UpdatePanel()
+        {
+            GetPlayerHand(1);
+            Panel1.Controls.Add(new Label { Text = DisplayCards().ToString() });
+            GetPlayerHand(2);
+            Panel2.Controls.Add(new Label { Text = DisplayCards().ToString() });
+        }
+        protected StringBuilder DisplayCards()                             //dc deck builder
         {
             StringBuilder sb = new StringBuilder();
-            
-           
-            if (playerid == 1)                      //deck for player1
+
+            sb.Append("<table>");
+            for (int i = 0; i < cards.Length; ++i)
             {
-                player1.setPlayerHand(1);
-                sb.Append("<table>");
-                for (int i = 0; i < player1.Playerhand.Length; ++i)
+                if (cards[i].IsAlive() == true)
                 {
                     if (i == 0) sb.Append("<tr>");
                     sb.Append("<th>");
-                    sb.Append("<img" + ' ' + "src=" + '"' + player1.getPlayerCardImg(i) + '"' + '>');
-                    sb.Append(player1.getPlayerCard(i) + "\n");
+                    sb.Append("<img" + ' ' + "src=" + '"' + cards[i].GetImg() + '"' + '>');
+                    sb.Append(cards[i].GetData() + "\n");
                     sb.Append("</th>");
-                    if (i == player1.Playerhand.Length) sb.Append("</tr>");
+                    if (i == cards.Length) sb.Append("</tr>");
                 }
-                sb.Append("</table>");
-
             }
-            else if (playerid == 2)                 //deck for player2
-            {
-                player2.setPlayerHand(1);
+            sb.Append("</table>");
 
-                sb.Append("<table>");
-                for (int i = 0; i < player2.Playerhand.Length; ++i)
-                {
-                    if (i == 0) sb.Append("<tr>");
-                    sb.Append("<th>");
-                    sb.Append("<img" + ' ' + "src=" + '"' + player2.getPlayerCardImg(i) + '"' + '>');
-                    sb.Append(player2.getPlayerCard(i) + "\n");
-                    sb.Append("</th>");
-                    if (i == player2.Playerhand.Length) sb.Append("</tr>");
 
-                }
-                sb.Append("</table>");
-
-            }
             return sb;
         }
 
-        protected StringBuilder MarvelDeckBuilder(int playerid)                             //marvel deck builder
+        public void GetPlayerHand(int playerid) // get the deck of a player from db
         {
+            cards = new Cardmodel[6];
+            SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("deck_" + playerid);
 
-            StringBuilder sb = new StringBuilder();
+            //Cardmodel[] tempcards = new Cardmodel[cards_table.RowCount];
 
-            if (playerid == 1)                      //deck for player1
+            for (int i = 0; i < cards_table.RowCount; ++i)
             {
-                player1.setPlayerHand(2);
-                sb.Append("<table>");
-                for (int i = 0; i < player1.Playerhand.Length; ++i)
-                {
-                    if(player1.isCardAlive(i)==true)
-                    {
-                        if (i == 0) sb.Append("<tr>");
-                        sb.Append("<th>");
-                        sb.Append("<img" + ' ' + "src=" + '"' + player1.getPlayerCardImg(i) + '"' + '>');
-                        sb.Append(player1.getPlayerCard(i) + "\n");
-                        sb.Append("</th>");
-                        if (i == player1.Playerhand.Length) sb.Append("</tr>");
-                    }
-
-                }
-                sb.Append("</table>");
+                cards[i] = new Cardmodel(i, playerid);
             }
-            else if (playerid == 2)                 //deck for palyer2
-            {
-                player2.setPlayerHand(2);
-
-                sb.Append("<table>");
-                for (int i = 0; i < player2.Playerhand.Length; ++i)
-                {
-                    if(player2.isCardAlive(i)==true)
-                    {
-                        if (i == 0) sb.Append("<tr>");
-                        sb.Append("<th>");
-                        sb.Append("<img" + ' ' + "src=" + '"' + player2.getPlayerCardImg(i) + '"' + '>');
-                        sb.Append(player2.getPlayerCard(i) + "\n");
-                        sb.Append("</th>");
-                        if (i == player2.Playerhand.Length) sb.Append("</tr>");
-                    }
-                }
-                sb.Append("</table>");
-            }
-            return sb;
         }
-        protected void CheckedBoxes()
-        {
-            int cardidp1=0;
-            int cardidp2=0;
-            if (CheckBox1.Checked == true)
-                cardidp1 = 0;
-            if (CheckBox2.Checked==true)
-                cardidp1 = 1;
-            if (CheckBox3.Checked == true)
-                cardidp1 = 2;
-            if (CheckBox4.Checked == true)
-                cardidp1 = 3;
-            if (CheckBox5.Checked == true)
-                cardidp1 = 4;
-            if (CheckBox6.Checked == true)
-                cardidp1 = 5;
-            if (CheckBox7.Checked == true)
-                cardidp2 = 0;
-            if (CheckBox8.Checked == true)
-                cardidp2 = 1;
-            if (CheckBox9.Checked == true)
-                cardidp2 = 2;
-            if (CheckBox10.Checked == true)
-                cardidp2 = 3;
-            if (CheckBox11.Checked == true)
-                cardidp2 = 4;
-            if (CheckBox12.Checked == true)
-                cardidp2 = 5;
 
-            player1.RetCard(cardidp1).Cardhealth = player1.RetCard(cardidp1).Cardhealth - player2.RetCard(cardidp2).Cardhealth;
-            player2.RetCard(cardidp2).Cardhealth = player2.RetCard(cardidp2).Cardhealth - player1.RetCard(cardidp1).Cardhealth;
+        protected int Selectedcard(int playerid)
+        {
+            int cardid=0;
+            if(playerid == 1)
+            {
+                if (CheckBox1.Checked == true)
+                    cardid = 0;
+                if (CheckBox2.Checked == true)
+                    cardid = 1;
+                if (CheckBox3.Checked == true)
+                    cardid = 2;
+                if (CheckBox4.Checked == true)
+                    cardid = 3;
+                if (CheckBox5.Checked == true)
+                    cardid = 4;
+                if (CheckBox6.Checked == true)
+                    cardid = 5;
+            }
+
+            if(playerid ==2)
+            {
+                if (CheckBox7.Checked == true)
+                    cardid = 0;
+                if (CheckBox8.Checked == true)
+                    cardid = 1;
+                if (CheckBox9.Checked == true)
+                    cardid = 2;
+                if (CheckBox10.Checked == true)
+                    cardid = 3;
+                if (CheckBox11.Checked == true)
+                    cardid = 4;
+                if (CheckBox12.Checked == true)
+                    cardid = 5;
+            }
+
+            return cardid;
         }
         //update checkboxlist 
         protected void UpdateCheckBox(int playerid)
         {
-            CheckBox1.ID = 1.ToString();
 
             if(playerid==1)
             {
-                if (player1.isCardAlive(0) == true)
+                if (cards[0].IsAlive() == true)
                     CheckBox1.Visible = true;
                 else
                     CheckBox1.Visible = false;
-                if (player1.isCardAlive(1) == true)
+                if (cards[1].IsAlive() == true)
                     CheckBox2.Visible = true;
                 else
                     CheckBox2.Visible = false;
-                if (player1.isCardAlive(2) == true)
+                if (cards[2].IsAlive() == true)
                     CheckBox3.Visible = true;
                 else
                     CheckBox3.Visible = false;
-                if (player1.isCardAlive(3) == true)
+                if (cards[3].IsAlive() == true)
                     CheckBox4.Visible = true;
                 else
                     CheckBox4.Visible = false;
-                if (player1.isCardAlive(4) == true)
+                if (cards[4].IsAlive() == true)
                     CheckBox5.Visible = true;
                 else
                     CheckBox5.Visible = false;
-                if (player1.isCardAlive(5) == true)
+                if (cards[5].IsAlive() == true)
                     CheckBox6.Visible = true;
                 else
                     CheckBox6.Visible = false;
             }
             else if(playerid==2)
             {
-                if (player2.isCardAlive(0) == true)
+                if (cards[0].IsAlive() == true)
                     CheckBox7.Visible = true;
                 else
                     CheckBox7.Visible = false;
-                if (player2.isCardAlive(1) == true)
+                if (cards[1].IsAlive() == true)
                     CheckBox8.Visible = true;
                 else
                     CheckBox8.Visible = false;
-                if (player2.isCardAlive(2) == true)
+                if (cards[2].IsAlive() == true)
                     CheckBox9.Visible = true;
                 else
                     CheckBox9.Visible = false;
-                if (player2.isCardAlive(3) == true)
+                if (cards[3].IsAlive() == true)
                     CheckBox10.Visible = true;
                 else
                     CheckBox10.Visible = false;
-                if (player2.isCardAlive(4) == true)
+                if (cards[4].IsAlive() == true)
                     CheckBox11.Visible = true;
                 else
                     CheckBox11.Visible = false;
-                if (player2.isCardAlive(5) == true)
+                if (cards[5].IsAlive() == true)
                     CheckBox12.Visible = true;
                 else
                     CheckBox12.Visible = false;
             }
 
+        }
+        protected void DoJob()
+        {
+
+            //GetPlayerHand(1);
+
+            //GetPlayerHand(2);
+            //Card1Health = cards[Selectedcard(2)].Cardhealth;
+            //Card1Damage = cards[Selectedcard(2)].Carddamage;
+
+
+            //int result = b - a;
+            //int result2 = a - b;
+            //GetPlayerHand(1);
+            //UpdateCheckBox(1);
+
+            //GetPlayerHand(2);
+            //UpdateCheckBox(2);
+
+        }
+
+        protected void DeleteTemporaryTables()
+        {
+            SQLDatabase.DatabaseTable temp = new SQLDatabase.DatabaseTable("GamePlayers");
+
+            temp.DeleteTemp();
         }
     }
 }

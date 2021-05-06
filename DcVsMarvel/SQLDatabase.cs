@@ -280,7 +280,6 @@ namespace SQLDatabase
             Rows[FindRowIndex("id", row_to_update["id"])] = row_to_update;  // Rewrite this new row over the existing row in the in-memory database.
         }
 
-
         /// <summary>
         /// Calculate and return the next ID number in the sequence, so it can be used to insert new rows. Assumes that the table has an integer field called 'ID'.
         /// </summary>
@@ -355,6 +354,55 @@ namespace SQLDatabase
             }
 
             data_list.DataSource = ds;
+        }
+
+        public void CreateTable(string playerid, string deckname)
+        {
+            string playerid_deck = "deck_" + playerid;
+            // INSERT NEW TABLE WITH CARDS in DB
+
+            SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DataBase"].ConnectionString);    // Grab the conection string for accessing the database.
+
+            string sql_command = "SELECT id, name, health, damage, image ,deckname INTO "+ playerid_deck + " FROM Cards WHERE deckname= '" + deckname + "';";
+
+            SqlCommand command = new SqlCommand(sql_command, connection);    // Associate the sql query with the connection.
+
+            connection.Open();
+
+            command.ExecuteNonQuery();
+
+            connection.Close();
+        }
+        public void Update(string columnname, string value, string condition)
+        {
+            string u = columnname + " = '" + value + "'";
+            // Send the UPDATE to the database...
+
+            SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DataBase"].ConnectionString);    // Grab the conection string for accessing the database.
+
+            string sql_command = "UPDATE " + TableName + " SET " + u + " WHERE ID='" + condition + "';";
+
+            SqlCommand command = new SqlCommand(sql_command, connection);    // Associate the sql query with the connection.
+
+            connection.Open();
+
+            command.ExecuteNonQuery();
+
+            connection.Close();
+        }
+        public void DeleteTemp()
+        {
+            SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DataBase"].ConnectionString);    // Grab the conection string for accessing the database.
+
+            string sql_command = "DROP TABLE deck_1; DROP TABLE deck_2; DELETE FROM GamePlayers WHERE 1=1 DBCC CHECKIDENT ('GamePlayers', RESEED, 0)  ;";
+
+            SqlCommand command = new SqlCommand(sql_command, connection);    // Associate the sql query with the connection.
+
+            connection.Open();
+
+            command.ExecuteNonQuery();
+
+            connection.Close();
         }
     }
 }

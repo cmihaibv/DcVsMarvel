@@ -16,9 +16,9 @@ namespace DcVsMarvel.models
         public string Deckname { get; set; }
         public bool Cardalive { get; set; }
 
-        public Cardmodel(int theid)
+        public Cardmodel(int theid, int playerid)
         {
-            SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("Cards");   // Need to load the table we're going to insert into.
+            SQLDatabase.DatabaseTable cards_table = new SQLDatabase.DatabaseTable("deck_"+ playerid);   // Need to load the table we're going to insert into.
             Id = theid;
             Cardid = Int32.Parse(cards_table.GetRow(Id)["id"]);
             Cardname = cards_table.GetRow(Id)["name"];
@@ -41,11 +41,6 @@ namespace DcVsMarvel.models
             return Imageurl;
         }
 
-        public string GetDeckName()
-        {
-            return Deckname;
-        }
-
         public bool IsAlive()
         {
             Cardalive = false;
@@ -55,6 +50,5 @@ namespace DcVsMarvel.models
 
             return Cardalive;
         }
-
     }
 }
